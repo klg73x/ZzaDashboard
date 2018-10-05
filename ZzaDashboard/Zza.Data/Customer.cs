@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace Zza.Data
 {
@@ -14,7 +13,15 @@ namespace Zza.Data
         [Key]
         public Guid Id { get; set; }
         public Guid? StoreId { get; set; }
-        public string FirstName { get; set; }
+        private string _firstName;
+        public string FirstName
+        {
+            get
+            {
+                return _firstName;
+            }
+            set { _firstName = value; }
+        }
         public string LastName { get; set; }
         public string FullName { get { return FirstName + " " + LastName; } }
         public string Phone { get; set; }
