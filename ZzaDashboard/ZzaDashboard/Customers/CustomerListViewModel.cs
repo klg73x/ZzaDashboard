@@ -25,10 +25,15 @@ namespace ZzaDashboard.Customers
 
         public CustomerListViewModel()
         {
+            
+            DeleteCommand = new RelayCommand(OnDelete, CanDelete);
+        }
+        public async void LoadCustomers()
+        {
             if (DesignerProperties.GetIsInDesignMode(
                 new System.Windows.DependencyObject())) return; //we use this line so that the call to data won't execute in the designer
-            Customers = new ObservableCollection<Customer>(_repo.GetCustomersAsync().Result); //this .Result is needed because we are calling this syncronously even though it is an async call
-            DeleteCommand = new RelayCommand(OnDelete, CanDelete);
+            Customers = new ObservableCollection<Customer>(await _repo.GetCustomersAsync());
+
         }
         private Customer _selectedCustomer;
         public Customer SelectedCustomer
