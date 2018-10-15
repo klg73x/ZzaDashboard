@@ -7,15 +7,46 @@
              xmlns:local="clr-namespace:ZzaDashboard"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.InputBindings>
+        <KeyBinding Key="D"
+                    Modifiers="Ctrl"
+                    Command="{Binding DeleteCommand}"/>
+    </UserControl.InputBindings>
+    <UserControl.Resources>
+        <DataTemplate x:Key="CustomerTemplate">
+            <Border BorderThickness="3"
+                    BorderBrush="Blue">
+                <StackPanel>
+                    <TextBlock Text="{Binding FirstName}"/>
+                    <TextBlock Text="{Binding LastName}"/>
+                    <TextBlock Text="{Binding Phone}"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
     <UserControl.DataContext>
         <cust:CustomerListViewModel/>
     </UserControl.DataContext>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <Button Content="Delete"
+                Command="{Binding DeleteCommand}"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Width="75"/>
+
         <DataGrid x:Name="customerDataGrid"
                   AutoGenerateColumns="False"
                   EnableRowVirtualization="True"
                   ItemsSource="{Binding Customers}" 
-                  RowDetailsVisibilityMode="VisibleWhenSelected">
+                  SelectedItem="{Binding SelectedCustomer}"
+                  RowDetailsVisibilityMode="VisibleWhenSelected"
+                  Grid.Row="1">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="firstNameColumn"
                                     Binding="{Binding FirstName}"
@@ -31,5 +62,8 @@
                                     Width="SizeToHeader"/>
             </DataGrid.Columns>
         </DataGrid>
+        <ListBox ItemsSource="{Binding Customers}"
+                 ItemTemplate="{StaticResource CustomerTemplate}"
+                 Grid.Row="2"/>
     </Grid>
 </UserControl>
