@@ -2,9 +2,17 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Customers="clr-namespace:ZzaDashboard.Customers"
+        xmlns:local="clr-namespace:ZzaDashboard"
         Title="MainWindow" Height="350" Width="525">
+    <Window.DataContext>
+        <local:MainWindowViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type Customers:CustomerListViewModel}">
+            <Customers:CustomerListView/>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
-        <Customers:CustomerListView Margin="0,0,0,146"/>
-        <Customers:CustomerDetailView/>
+        <ContentControl Content="{Binding CurrentViewModel}" />
     </Grid>
 </Window>
