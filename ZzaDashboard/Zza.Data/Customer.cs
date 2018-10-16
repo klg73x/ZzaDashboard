@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Zza.Data
 {
-    public class Customer
+    public class Customer : INotifyPropertyChanged
     {
         public Customer()
         {
@@ -14,13 +15,24 @@ namespace Zza.Data
         public Guid Id { get; set; }
         public Guid? StoreId { get; set; }
         private string _firstName;
+
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
         public string FirstName
         {
             get
             {
                 return _firstName;
             }
-            set { _firstName = value; }
+            set
+            {
+                if (_firstName != value)
+                {
+                    _firstName = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("FirstName"));
+                }
+
+            }
         }
         public string LastName { get; set; }
         public string FullName { get { return FirstName + " " + LastName; } }

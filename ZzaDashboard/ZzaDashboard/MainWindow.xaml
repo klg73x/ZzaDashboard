@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Customers="clr-namespace:ZzaDashboard.Customers"
         xmlns:local="clr-namespace:ZzaDashboard"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"        
         Title="MainWindow" Height="350" Width="525">
     <Window.DataContext>
         <local:MainWindowViewModel/>
@@ -13,6 +14,16 @@
         </DataTemplate>
     </Window.Resources>
     <Grid>
-        <ContentControl Content="{Binding CurrentViewModel}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <ContentControl>
+            <i:Interaction.Behaviors>
+                <local:ShowNotificationMessageBehavior Message="{Binding NotificationMessage}" />
+            </i:Interaction.Behaviors>
+        </ContentControl>
+        <ContentControl Content="{Binding CurrentViewModel}" 
+                        Grid.Row="1"/>
     </Grid>
 </Window>
