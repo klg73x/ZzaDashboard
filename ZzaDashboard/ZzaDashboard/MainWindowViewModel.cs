@@ -6,39 +6,69 @@ using System.Text;
 using System.Timers;
 using System.Threading.Tasks;
 using ZzaDashboard.Customers;
+using ZzaDashboard.Orders;
+using ZzaDashboard.OrderPrep;
+using ZzaDesktop;
+using Zza.Data;
 
 namespace ZzaDashboard
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : BindableBase
     {
-        private Timer _timer = new Timer(5000);
+        private CustomerListViewModel _customerListViewModel = new CustomerListViewModel();
+        private OrderViewModel _orderViewModel = new OrderViewModel();
+        private OrderPrepViewModel _orderPrepViewModel = new OrderPrepViewModel();
+        private AddEditCustomerViewModel _addEditCustomerViewModel = new AddEditCustomerViewModel();
 
+        private BindableBase _CurrentViewModel;
         public MainWindowViewModel()
         {
-            CurrentViewModel = new CustomerListViewModel();
-            _timer.Elapsed += (s, e) => NotificationMessage = "At the tone the time will be: " + DateTime.Now.ToString();
-            _timer.Start();
+            NavCommand = new RelayCommand<string>(OnNav);
+            _customerListViewModel.PlaceOrderRequested += NavToOrder;
+            _customerListViewModel.AddCustomerRequested += NavToAddCustomer;
+            _customerListViewModel.EditCustomerRequested += NavToEditCustomer;
         }
 
-        public object CurrentViewModel { get; set; }
-
-        private string _NotificationMessage;
-        public string NotificationMessage
+        private void NavToEditCustomer(Customer cust)
         {
-            get
-            {
-                return _NotificationMessage;
-            }
-            set
-            {
-                if (value != _NotificationMessage)
-                {
-                    _NotificationMessage = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("NotificationMessage"));
-                }
-            }
+            _addEditCustomerViewModel.EditMode = true;
+            _addEditCustomerViewModel.SetCustomer(cust);
+            CurrentViewModel = _addEditCustomerViewModel;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        private void NavToAddCustomer(Customer cust)
+        {
+            _addEditCustomerViewModel.EditMode = false;
+            _addEditCustomerViewModel.SetCustomer(cust);
+            CurrentViewModel = _addEditCustomerViewModel;
+        }
+
+        private void NavToOrder(Guid customerId)
+        {
+            _orderViewModel.CustomerId = customerId;
+            CurrentViewModel = _orderViewModel;
+        }
+
+        public BindableBase CurrentViewModel
+        {
+            get { return _CurrentViewModel; }
+            set { SetProperty(ref _CurrentViewModel, value); }
+        }
+
+        public RelayCommand<string> NavCommand { get; private set; }
+
+        private void OnNav(string destination)
+        {
+            switch (destination)
+            {
+                case "orderPrep":
+                    CurrentViewModel = _orderPrepViewModel;
+                    break;
+                case "customers":
+                default:
+                    CurrentViewModel = _customerListViewModel;
+                    break;
+            }
+        }
     }
 }

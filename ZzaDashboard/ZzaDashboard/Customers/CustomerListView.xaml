@@ -11,75 +11,52 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" 
              d:DesignWidth="800">
-    <UserControl.Resources>
-        <DataTemplate x:Key="CustomerTemplate">
-            <Border BorderThickness="3"
-                    BorderBrush="Blue">
-                <StackPanel>
-                    <TextBlock Text="{Binding FirstName}"/>
-                    <TextBlock Text="{Binding LastName}"/>
-                    <TextBlock Text="{Binding Phone}"/>
-                </StackPanel>
-            </Border>
-        </DataTemplate>
-    </UserControl.Resources>
-    <UserControl.InputBindings>
-        <KeyBinding Key="D"
-                    Modifiers="Ctrl"
-                    Command="{Binding DeleteCommand}"/>
-    </UserControl.InputBindings>
-    <UserControl.DataContext>
-        <cust:CustomerListViewModel/>
-    </UserControl.DataContext>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <ei:CallMethodAction TargetObject="{Binding}"
+            <ei:CallMethodAction TargetObject="{Binding}" 
                                  MethodName="LoadCustomers"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-
-        <Button Content="Delete"
-                Command="{Binding DeleteCommand}"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Width="75"/>
-        <Button Content="Change Customer"
-                Margin="80,0,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Width="100"
-                Click="OnChangeCustomer"/>
-        
-        <DataGrid x:Name="customerDataGrid"
-                  AutoGenerateColumns="False"
-                  EnableRowVirtualization="True"
+        <Grid>
+            <Button Content="Add Customer"
+                    Command="{Binding AddCustomerCommand}"
+                    HorizontalAlignment="Left" />
+        </Grid>
+        <DataGrid AutoGenerateColumns="False"                  
                   ItemsSource="{Binding Customers}" 
-                  SelectedItem="{Binding SelectedCustomer}"
-                  RowDetailsVisibilityMode="VisibleWhenSelected"
+                  CanUserAddRows="False"
                   Grid.Row="1">
             <DataGrid.Columns>
-                <DataGridTextColumn x:Name="firstNameColumn"
-                                    Binding="{Binding FirstName}"
-                                    Header="First Name"
-                                    Width="SizeToHeader"/>
-                <DataGridTextColumn x:Name="lastNameColumn"
-                                    Binding="{Binding LastName}"
-                                    Header="Last Name"
-                                    Width="SizeToHeader"/>
-                <DataGridTextColumn x:Name="phoneColumn"
-                                    Binding="{Binding Phone}"
-                                    Header="Phone"
-                                    Width="SizeToHeader"/>
+                <DataGridTextColumn Binding="{Binding FullName}"
+                                    Width="*"/>
+                <DataGridTemplateColumn Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Place Order"
+                                    Command="{Binding DataContext.PlaceOrderCommand,
+                                        RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                    CommandParameter="{Binding}"
+                                    Margin="5" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Edit"
+                                    Command="{Binding DataContext.EditCustomerCommand,
+                                        RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                    CommandParameter="{Binding}"
+                                    Margin="5" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <ListBox ItemsSource="{Binding Customers}"
-                 ItemTemplate="{StaticResource CustomerTemplate}"
-                 Grid.Row="2"/>
     </Grid>
 </UserControl>

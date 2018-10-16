@@ -12,18 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Zza.Data;
 
 namespace ZzaDashboard.Customers
 {
     /// <summary>
-    /// Interaction logic for CustomerListView.xaml
+    /// Interaction logic for AddEditCustomerView.xaml
     /// </summary>
-    public partial class CustomerListView : UserControl
+    public partial class AddEditCustomerView : UserControl
     {
-        public CustomerListView()
+        public AddEditCustomerView()
         {
             InitializeComponent();
-        }        
+        }
     }
 }

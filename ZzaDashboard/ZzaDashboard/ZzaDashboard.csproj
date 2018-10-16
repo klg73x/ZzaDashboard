@@ -67,6 +67,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BindableBase.cs" />
+    <Compile Include="Customers\AddEditCustomerView.xaml.cs">
+      <DependentUpon>AddEditCustomerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Customers\AddEditCustomerViewModel.cs" />
     <Compile Include="Customers\CustomerDetailView.xaml.cs">
       <DependentUpon>CustomerDetailView.xaml</DependentUpon>
     </Compile>
@@ -83,6 +87,14 @@
     </Compile>
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="MvvmBehaviors.cs" />
+    <Compile Include="OrderPrep\OrderPrepView.xaml.cs">
+      <DependentUpon>OrderPrepView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OrderPrep\OrderPrepViewModel.cs" />
+    <Compile Include="Orders\OrderView.xaml.cs">
+      <DependentUpon>OrderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Orders\OrderViewModel.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Services\CustomersRepository.cs" />
     <Compile Include="Services\ICustomersRepository.cs" />
@@ -132,6 +144,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Customers\AddEditCustomerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Customers\CustomerDetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -145,6 +161,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OrderPrep\OrderPrepView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Orders\OrderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

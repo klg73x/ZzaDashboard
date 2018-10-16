@@ -3,14 +3,14 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Zza.Data;
 using ZzaDashboard.Services;
+using ZzaDesktop;
 
 namespace ZzaDashboard.Customers
 {
-    public class CustomerListViewModel : INotifyPropertyChanged
+    public class CustomerListViewModel : BindableBase
     {
-        private ObservableCollection<Customer> _customers;
         private ICustomersRepository _repo = new CustomersRepository();
-        public RelayCommand DeleteCommand { get; private set; }
+        private ObservableCollection<Customer> _customers;       
         public ObservableCollection<Customer> Customers
         {
             get
@@ -19,54 +19,46 @@ namespace ZzaDashboard.Customers
             }
             set
             {
-                if (_customers != value)
-                {
-                    _customers = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("Customers"));
-                }
+                SetProperty(ref _customers, value);
             }
         }
+
+        public RelayCommand<Customer> PlaceOrderCommand { get; private set; }
+        public event Action<Guid> PlaceOrderRequested = delegate { };
+
+        public RelayCommand AddCustomerCommand { get; private set; }
+        public event Action<Customer> AddCustomerRequested = delegate { };
+
+        public RelayCommand<Customer> EditCustomerCommand { get; private set; }
+        public event Action<Customer> EditCustomerRequested = delegate { };
 
         public CustomerListViewModel()
         {
-            
-            DeleteCommand = new RelayCommand(OnDelete, CanDelete);
+            PlaceOrderCommand = new RelayCommand<Customer>(OnPlaceOrder);
+            AddCustomerCommand = new RelayCommand(OnAddCustomer);
+            EditCustomerCommand = new RelayCommand<Customer>(OnEditCustomer);
         }
+
+        private void OnEditCustomer(Customer customer)
+        {
+            EditCustomerRequested(customer);
+        }
+
+        private void OnAddCustomer()
+        {
+            AddCustomerRequested(new Customer { Id = Guid.NewGuid() });
+        }
+
+        private void OnPlaceOrder(Customer customer)
+        {
+            PlaceOrderRequested(customer.Id);
+        }
+
         public async void LoadCustomers()
         {
-            if (DesignerProperties.GetIsInDesignMode(
-                new System.Windows.DependencyObject())) return; //we use this line so that the call to data won't execute in the designer
-            Customers = new ObservableCollection<Customer>(await _repo.GetCustomersAsync());
-
+            Customers = new ObservableCollection<Customer>(
+                await _repo.GetCustomersAsync());
         }
-        private Customer _selectedCustomer;
-
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
-
-        public Customer SelectedCustomer
-        {
-            get
-            {
-                return _selectedCustomer;
-            }
-            set
-            {
-                if (_selectedCustomer != value)
-                {
-                    _selectedCustomer = value;
-                    DeleteCommand.RaiseCanExecuteChanged();
-                    PropertyChanged(this, new PropertyChangedEventArgs("SelectedCustomer"));
-                }               
-            }
-        }
-        private bool CanDelete()
-        {
-            return SelectedCustomer != null;
-        }
-
-        private void OnDelete()
-        {
-            Customers.Remove(SelectedCustomer);
-        }
+       
     }
 }
