@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Timers;
-using System.Threading.Tasks;
-using ZzaDashboard.Customers;
-using ZzaDashboard.Orders;
-using ZzaDashboard.OrderPrep;
-using ZzaDesktop;
 using Zza.Data;
+using ZzaDashboard.Customers;
+using ZzaDashboard.OrderPrep;
+using ZzaDashboard.Orders;
+using ZzaDesktop;
 
 namespace ZzaDashboard
 {
@@ -27,6 +21,12 @@ namespace ZzaDashboard
             _customerListViewModel.PlaceOrderRequested += NavToOrder;
             _customerListViewModel.AddCustomerRequested += NavToAddCustomer;
             _customerListViewModel.EditCustomerRequested += NavToEditCustomer;
+            _addEditCustomerViewModel.Done += NavToCustomerList;
+        }
+
+        private void NavToCustomerList()
+        {           
+            CurrentViewModel = _customerListViewModel;
         }
 
         private void NavToEditCustomer(Customer cust)
